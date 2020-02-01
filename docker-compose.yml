@@ -90,6 +90,18 @@ services:
       - 3306
     networks:
       - default
+  phpmyadmin:
+    depends_on:
+      - mysql
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    ports:
+      - '8899:80'
+    environment:
+      PMA_HOST: mysql
+      MYSQL_ROOT_PASSWORD: scandipwa 
+    networks:
+      - default
   redis:
     image: redis:${REDIS_VERSION}
     restart: on-failure:5
