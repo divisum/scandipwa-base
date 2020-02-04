@@ -117,18 +117,24 @@ services:
     image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTICSEARCH_VERSION}
     restart: on-failure:5
     env_file: .env
+    restart: on-failure:5
+    container_name: elastic
     environment:
+      - node.name=es01
+      - cluster.name=es-docker-cluster
+      - discovery.seed_hosts=es02,es03
+      - cluster.initial_master_nodes=es01,es02,es03
       - bootstrap.memory_lock=true
       - xpack.security.enabled=false
-      - "ES_JAVA_OPTS=-Xms256m -Xmx256m"
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     ulimits:
       memlock:
         soft: -1
         hard: -1
     volumes:
-      - elasticsearch-data:/usr/share/elasticsearch/data
+      - data01:/usr/share/elasticsearch/data
     ports:
-      - ${ELASTICSEARCH_PORT}:9200
+      - ${ELASTICSEARCH_PORT}:9222
     networks:
       - default
 volumes:
@@ -137,6 +143,7 @@ volumes:
   mysql-data:
   redis-data:
   elasticsearch-data:
+  data01:
 
 networks:
   default:
